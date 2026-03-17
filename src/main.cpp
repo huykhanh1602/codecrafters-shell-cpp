@@ -12,7 +12,9 @@ int main() {
         std::getline(std::cin, command);
         if (command == "exit") {
             break;
+        } else if (command == "echo") {
+            std::cout << command << std::endl;
         }
-        std::cout << command << "\n";
+        std::cout << command << ": command not found" << std::endl;
     }
 }
