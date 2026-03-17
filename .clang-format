@@ -1,0 +1,12 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+# Đưa ngoặc nhọn lên cùng dòng
+BreakBeforeBraces: Attach
+# Độ rộng thụt lề
+IndentWidth: 4
+# Không giới hạn độ dài dòng (giống Prettier)
+ColumnLimit: 0
+# Thêm khoảng trống sau dấu phẩy, giữa các toán tử
+SpaceAfterCStyleCast: true
+---
