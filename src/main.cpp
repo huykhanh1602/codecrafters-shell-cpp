@@ -48,7 +48,7 @@ void type(std::string input) {
     } else if (const auto &exec_path = is_executable(input); !exec_path.empty()) {
         std::cout << input << " is " << exec_path << std::endl;
     } else {
-        std::cout << input << ": command not found" << std::endl;
+        std::cout << input << ": not found" << std::endl;
     }
 }
 
