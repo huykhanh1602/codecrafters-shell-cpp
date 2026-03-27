@@ -46,7 +46,7 @@ void type(std::string input) {
     if (found) {
         std::cout << input << " is a shell builtin" << std::endl;
     } else if (const auto &exec_path = is_executable(input); !exec_path.empty()) {
-        std::cout << input << " is an executable file" << std::endl;
+        std::cout << input << " is " << exec_path << std::endl;
     } else {
         std::cout << input << ": command not found" << std::endl;
     }
