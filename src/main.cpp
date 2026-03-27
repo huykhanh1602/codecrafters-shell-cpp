@@ -8,29 +8,17 @@ std::string builtin[] = {"echo", "type", "exit"};
 
 std::string is_executable(const fs::path &path) {
     char *env_path = std::getenv("PATH");
-    std::vector<std::string> dirs;
     if (env_path == nullptr)
         return "";
     std::string_view path_env(env_path);
     size_t start = 0;
-    while (true) {
-        size_t end = path_env.find(':', start);
-        if (end == std::string_view::npos) {
-            dirs.push_back(std::string(path_env.substr(start)));
-            break;
+    size_t end;
+    while ((end = path_env.find(':', start)) != std::string_view::npos) {
+        fs::path full_path = fs::path(path_env.substr(start, end - start)) / path;
+        if (fs::exists(full_path) && fs::is_regular_file(full_path) && ((fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none)) {
+            return full_path.string();
         }
-        dirs.push_back(std::string(path_env.substr(start, end - start)));
         start = end + 1;
-    }
-    // std::cout << "Checking for " << path << " in PATH directories:" << std::endl;
-    for (const auto &dir : dirs) {
-        fs::path full_path = fs::path(dir) / path;
-        // std::cout << "  " << full_path << std::endl;
-        if (fs::exists(full_path) && fs::is_regular_file(full_path) && (fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none) {
-            std::string(full_path);
-            return dir + "/" + path.filename().string();
-            // std::cout << "Found executable: " << full_path << std::endl;
-        }
     }
     return "";
 }
