@@ -25,7 +25,7 @@ bool is_executable(const fs::path &path) {
     // std::cout << "Checking for " << path << " in PATH directories:" << std::endl;
     for (const auto &dir : dirs) {
         fs::path full_path = fs::path(dir) / path;
-        std::cout << "  " << full_path << std::endl;
+        // std::cout << "  " << full_path << std::endl;
         if (fs::exists(full_path) && fs::is_regular_file(full_path) && (fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none) {
             return true;
             // std::cout << "Found executable: " << full_path << std::endl;
