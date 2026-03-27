@@ -6,11 +6,11 @@
 namespace fs = std::filesystem;
 std::string builtin[] = {"echo", "type", "exit"};
 
-bool is_executable(const fs::path &path) {
+std::string is_executable(const fs::path &path) {
     char *env_path = std::getenv("PATH");
     std::vector<std::string> dirs;
     if (env_path == nullptr)
-        return false;
+        return "";
     std::string_view path_env(env_path);
     size_t start = 0;
     while (true) {
@@ -27,11 +27,12 @@ bool is_executable(const fs::path &path) {
         fs::path full_path = fs::path(dir) / path;
         // std::cout << "  " << full_path << std::endl;
         if (fs::exists(full_path) && fs::is_regular_file(full_path) && (fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none) {
-            return true;
+            std::string(full_path);
+            return dir;
             // std::cout << "Found executable: " << full_path << std::endl;
         }
     }
-    return false;
+    return "";
 }
 
 void type(std::string input) {
@@ -44,7 +45,7 @@ void type(std::string input) {
     }
     if (found) {
         std::cout << input << " is a shell builtin" << std::endl;
-    } else if (is_executable(input)) {
+    } else if (const auto &exec_path = is_executable(input); !exec_path.empty()) {
         std::cout << input << " is an executable file" << std::endl;
     } else {
         std::cout << input << ": command not found" << std::endl;
