@@ -28,7 +28,7 @@ std::string is_executable(const fs::path &path) {
         // std::cout << "  " << full_path << std::endl;
         if (fs::exists(full_path) && fs::is_regular_file(full_path) && (fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none) {
             std::string(full_path);
-            return dir;
+            return dir + "/" + path.filename().string();
             // std::cout << "Found executable: " << full_path << std::endl;
         }
     }
