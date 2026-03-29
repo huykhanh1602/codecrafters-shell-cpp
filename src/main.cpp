@@ -3,6 +3,12 @@
 #include <string>
 #include <vector>
 
+#ifdef _WIN32
+const char PATH_SEPARATOR = ';';
+#else
+const char PATH_SEPARATOR = ':';
+#endif
+
 namespace fs = std::filesystem;
 std::string builtin[] = {"echo", "type", "exit"};
 
@@ -10,11 +16,22 @@ std::string is_executable(const fs::path &path) {
     char *env_path = std::getenv("PATH");
     if (env_path == nullptr)
         return "";
+
     std::string_view path_env(env_path);
+
     size_t start = 0;
     size_t end;
-    while ((end = path_env.find(':', start)) != std::string_view::npos) {
+#ifdef _WIN32
+    // on Windows, checking for .exe extension if not provided
+    std::cout << "win exe check for " << path << std::endl;
+    if (path.extension() != ".exe") {
+        return is_executable(path.string() + ".exe");
+    }
+#endif
+
+    while ((end = path_env.find(PATH_SEPARATOR, start)) != std::string_view::npos) {
         fs::path full_path = fs::path(path_env.substr(start, end - start)) / path;
+        std::cout << "Checking " << full_path << std::endl;
         if (fs::exists(full_path) && fs::is_regular_file(full_path) && ((fs::status(full_path).permissions() & fs::perms::owner_exec) != fs::perms::none)) {
             return full_path.string();
         }

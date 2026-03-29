@@ -1,0 +1,1 @@
+const auto &exec_path = is_executable(input); !exec_path.empty()
